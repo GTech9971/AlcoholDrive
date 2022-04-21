@@ -1,0 +1,7 @@
+{
+  "name": "AlcoholDrive",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

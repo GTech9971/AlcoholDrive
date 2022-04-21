@@ -1,0 +1,19 @@
+<ion-card tappable button="true" [class.selected]="this.isSelected()" (click)="onClickCard()">
+    <div style="margin-top: 10px;">
+        <ion-avatar class="ion-margin-start">
+            <ion-img [src]="this.getAvatorImagePath()"></ion-img>
+        </ion-avatar>
+    </div>
+
+    <ion-card-header>
+        <ion-card-subtitle>
+            <span *ngIf="this.user.UserBoss">
+                {{this.user?.UserBoss?.UserName}}
+            </span>
+        </ion-card-subtitle>
+        <ion-card-title>{{this.user.UserName}}</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+
+    </ion-card-content>
+</ion-card>
