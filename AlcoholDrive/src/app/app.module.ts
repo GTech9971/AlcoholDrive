@@ -6,7 +6,7 @@ import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-import { UserCardComponentModule } from './presentation/share/user-card/user-card.component.module';
+import { AlcoholCheckModule } from './presentation/alcohol-check/alcohol-check.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -15,6 +15,7 @@ import { UserCardComponentModule } from './presentation/share/user-card/user-car
     BrowserModule,
     IonicModule.forRoot(),
     AppRoutingModule,
+    AlcoholCheckModule,
   ],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
   bootstrap: [AppComponent],

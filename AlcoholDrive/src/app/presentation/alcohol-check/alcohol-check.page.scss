@@ -1,0 +1,18 @@
+.box{
+    width: 250px;
+    height: 250px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    background-color: bisque;
+    animation:4s ease-in 1s infinite alternate forwards running expansion;
+}
+@keyframes expansion{
+  0%{
+      background-color: bisque;
+  }
+  100%{
+    background:rgb(224, 118, 99);
+  }
+}

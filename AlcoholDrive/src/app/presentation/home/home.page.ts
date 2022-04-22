@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { UserModel } from 'src/app/domain/model/User.model';
 
@@ -13,7 +14,7 @@ export class HomePage {
 
   selectedUser: UserModel;
 
-  constructor() {
+  constructor(private router: Router) {
     this.userList = [];
     this.userList.push({ UserName: 'AAA', UserImagePath: '', UserBoss: undefined });
     this.userList.push({ UserName: 'BBB', UserImagePath: '', UserBoss: undefined });
@@ -32,6 +33,10 @@ export class HomePage {
     } else {
       this.selectedUser = user;
     }
+  }
+
+  async onClickAlcoholCheck() {
+    await this.router.navigate(['check']);
   }
 
 }
