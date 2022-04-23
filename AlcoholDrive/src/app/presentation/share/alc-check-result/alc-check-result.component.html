@@ -1,0 +1,54 @@
+<ion-grid class="center" style="height: 40%;">
+    <ion-row>
+        <ion-card>
+            <ion-card-header>
+                <ion-card-subtitle>検査結果</ion-card-subtitle>
+                <ion-card-title>
+                    <ion-text color="primary">
+                        陰性
+                    </ion-text>
+                </ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+                <ion-text style="font-weight: bold;" color="success">
+                    運転可能です
+                </ion-text>
+            </ion-card-content>
+        </ion-card>
+    </ion-row>
+</ion-grid>
+
+<ion-grid class="center">
+    <ion-row>
+        <ion-col size="6">
+            <ion-card button="true" tappable>
+                <ion-card-header>
+                    <ion-card-title>
+                        <ion-icon color="primary" size="large" name="mail-outline"></ion-icon>
+                    </ion-card-title>
+                </ion-card-header>
+                <ion-card-content>
+                    <span>検査結果を{{this.user?.UserBoss?.UserName}}に</span>
+                    <br>
+                    <span>メールで送信する</span>
+                </ion-card-content>
+            </ion-card>
+        </ion-col>
+
+        <ion-col size="6">
+            <ion-card button="true" tappable>
+                <ion-card-header>
+                    <ion-card-title>
+                        <ion-icon color="primary" size="large" name="logo-slack"></ion-icon>
+                    </ion-card-title>
+                </ion-card-header>
+                <ion-card-content>
+                    <span>検査結果を{{this.user?.UserBoss?.UserName}}に</span>
+                    <br />
+                    <span>Slackで送信する</span>
+                </ion-card-content>
+            </ion-card>
+        </ion-col>
+
+    </ion-row>
+</ion-grid>

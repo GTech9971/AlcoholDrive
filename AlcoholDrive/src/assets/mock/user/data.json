@@ -1,0 +1,38 @@
+[
+    {
+        "UserId": 100,
+        "UserName": "BIG BOSS",
+        "UserImagePath": "",
+        "UserBoss": null
+    },
+    {
+        "UserId": 101,
+        "UserName": "AAA",
+        "UserImagePath": "",
+        "UserBoss": {
+            "UserId": 100,
+            "UserName": "BIG BOSS",
+            "UserImagePath": ""
+        }
+    },
+    {
+        "UserId": 102,
+        "UserName": "BBB",
+        "UserImagePath": "",
+        "UserBoss": {
+            "UserId": 100,
+            "UserName": "BIG BOSS",
+            "UserImagePath": ""
+        }
+    },
+    {
+        "UserId": 103,
+        "UserName": "CCC",
+        "UserImagePath": "",
+        "UserBoss": {
+            "UserId": 100,
+            "UserName": "BIG BOSS",
+            "UserImagePath": ""
+        }
+    }
+]

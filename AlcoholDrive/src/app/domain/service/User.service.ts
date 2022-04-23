@@ -1,29 +1,20 @@
 import { Injectable } from "@angular/core";
 import { UserModel } from "../model/User.model";
+import { UserRepository } from "../repositories/UserRepository/User.repository";
 
 @Injectable({
     providedIn: 'root'
 })
 export class UserService {
 
-    private _selectedUser: UserModel;
-    public get SelectedUser(): UserModel {
-        return this._selectedUser;
+    constructor(private repository: UserRepository) {
     }
 
-    public set SelectedUser(value: UserModel) {
-        if (this._selectedUser === undefined) {
-            this._selectedUser = value;
-            return;
-        }
-        if (this._selectedUser === value) {
-            this._selectedUser = undefined;
-        } else {
-            this._selectedUser = value;
-        }
+    public async fetchUsers(): Promise<UserModel[]> {
+        return this.repository.fetchUsers();
     }
 
-    constructor() {
-        this._selectedUser = undefined;
+    public async getUser(userId: number): Promise<UserModel> {
+        return this.repository.fetchUser(userId);
     }
 }

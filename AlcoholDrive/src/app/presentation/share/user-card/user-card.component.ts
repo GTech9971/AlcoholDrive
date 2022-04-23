@@ -1,6 +1,5 @@
 import { Component, Input } from "@angular/core";
 import { UserModel } from "src/app/domain/model/User.model";
-import { UserService } from "src/app/domain/service/User.service";
 
 @Component({
     selector: 'alc-user-card',
@@ -11,8 +10,7 @@ export class UserCardComponent {
 
     @Input() user: UserModel;
 
-    constructor(private userService: UserService) {
-    }
+    constructor() { }
 
     getAvatorImagePath(): string {
         if (this.user.UserImagePath) {
@@ -20,14 +18,6 @@ export class UserCardComponent {
         } else {
             return "./assets/avatar.svg"
         }
-    }
-
-    isSelected(): boolean {
-        return this.userService.SelectedUser === this.user;
-    }
-
-    onClickCard() {
-        this.userService.SelectedUser = this.user;
     }
 
 }

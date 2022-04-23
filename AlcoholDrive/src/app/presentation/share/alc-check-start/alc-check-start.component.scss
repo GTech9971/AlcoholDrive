@@ -1,0 +1,63 @@
+.root{
+  position: relative;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  ion-row{
+    display: flex;
+    justify-content: center;
+  }
+}
+
+.box{
+    width: 250px;
+    height: 250px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    background-color: bisque;
+    animation:4s ease-in 1s infinite alternate forwards running expansion;
+}
+@keyframes expansion{
+  0%{
+      background-color: bisque;
+  }
+  100%{
+    background:rgb(224, 118, 99);
+  }
+}
+
+
+.check-text{
+  text-align: center;
+  color: gray;
+  animation:4s ease-in 1s infinite alternate forwards running text-expansion;
+}
+@keyframes text-expansion{
+  0%{
+      color: gray;
+  }
+  100%{
+    color: #f4f5f8;
+  }
+}
+
+.sensor-box{
+  position: relative;
+
+  border-radius: 50%;
+  background-color: #9ed7f9;
+  width: 250px;
+  height: 250px;
+}
+
+/* 縦 */
+.sensor-bg {
+  position:absolute;
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, color-stop(.5, transparent), color-stop(.5, #ffffff), to(#ffffff)),
+  -webkit-gradient(linear, 0 0, 100% 0, color-stop(.5, transparent), color-stop(.5, #ffffff), to(#ffffff));
+  -webkit-background-size: 10px 10px;
+}

@@ -1,0 +1,24 @@
+ion-card{
+  text-align: center;
+  width: 200px;
+}
+
+.center{
+  display: flex;   
+  justify-content: center;
+  align-items: center;
+}
+
+.check-text{
+    text-align: center;
+    color: gray;
+    animation:4s ease-in 1s infinite alternate forwards running text-expansion;
+  }
+  @keyframes text-expansion{
+    0%{
+        color: gray;
+    }
+    100%{
+      color: #f4f5f8;
+    }
+  }

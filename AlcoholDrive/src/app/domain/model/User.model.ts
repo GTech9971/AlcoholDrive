@@ -1,16 +1,10 @@
 export interface UserModel {
-    /**
-     * ユーザ名
-     */
+    /** ID */
+    UserId: number;
+    /** ユーザ名 */
     UserName: string;
-
-    /**
-     * ボス
-     */
+    /** ボス */
     UserBoss: UserModel;
-
-    /**
-     * ユーザ画像パス
-     */
+    /** ユーザ画像パス */
     UserImagePath: string;
 }

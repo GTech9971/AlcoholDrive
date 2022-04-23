@@ -3,26 +3,19 @@
         <ion-title>
             Alcohol Drive
         </ion-title>
-
-        <ion-buttons slot="end">
-            <ion-button>
-                <ion-icon name="cog-outline" size="large"></ion-icon>
-            </ion-button>
-        </ion-buttons>
-
     </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
 
-    <ion-grid style="height: 100%;    display: flex;    justify-content: center;    align-items: center;">
-        <ion-row style="display: flex; justify-content: center;">
-            <div class="box">
-                <ion-text style="text-align: center;" color="light">
-                    <h3> センサーに息を吹きかけてください</h3>
-                </ion-text>
-            </div>
-        </ion-row>
-    </ion-grid>
+    <ng-container *ngIf="this.alcDriveResult.State === this.STATE_SCANNING">
+        <alc-check-start></alc-check-start>
+    </ng-container>
+
+    <ng-container *ngIf="this.alcDriveResult.State === this.STATE_OK">
+        <alc-check-result [user]=" this.user" [alcDriveResult]="this.alcDriveResult">
+        </alc-check-result>
+    </ng-container>
+
 
 </ion-content>

@@ -19,14 +19,15 @@
     <ion-row>
       <ng-container *ngFor="let user of this.userList">
         <ion-col>
-          <alc-user-card [user]="user" (click)="onClickUserCard(user)"></alc-user-card>
+          <alc-user-card [user]="user" (click)="onClickUserCard(user)" [class.selected]="this.isSelected(user)">
+          </alc-user-card>
         </ion-col>
       </ng-container>
     </ion-row>
   </ion-grid>
 
   <ion-fab horizontal="center" vertical="bottom" slot="fixed">
-    <ion-fab-button color="danger" (click)="onClickAlcoholCheck()">
+    <ion-fab-button color="danger" (click)="onClickAlcoholCheck()" [disabled]="this.selectedUser === undefined">
       <ion-icon name="beer-outline"></ion-icon>
     </ion-fab-button>
   </ion-fab>
