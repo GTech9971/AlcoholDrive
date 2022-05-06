@@ -11,6 +11,7 @@ import { UserRepository } from './domain/repositories/UserRepository/User.reposi
 import { MockUserRepository } from './infra/UserRepository/MockUser.repository';
 import { AlcDriveRepository } from './domain/repositories/AlcDriveRepository/AlcDrive.repository';
 import { MockAlcDriveRepository } from './infra/UserRepository/MockAlcDrive.repository';
+import { AlcDriveImplRepository } from './infra/UserRepository/AlcDriveImpl.repository';
 
 @NgModule({
   declarations: [AppComponent],
@@ -25,7 +26,7 @@ import { MockAlcDriveRepository } from './infra/UserRepository/MockAlcDrive.repo
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     { provide: UserRepository, useClass: MockUserRepository },
-    { provide: AlcDriveRepository, useClass: MockAlcDriveRepository },
+    { provide: AlcDriveRepository, useClass: AlcDriveImplRepository },
   ],
   bootstrap: [AppComponent],
   schemas: [

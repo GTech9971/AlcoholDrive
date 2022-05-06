@@ -1,13 +1,19 @@
-import { AlcDriveResultodel } from "../../model/AlcDriveResult.model";
-import { AlcDriveState } from "../../model/AlcDriveState.model";
 
 export abstract class AlcDriveRepository {
+    /** デバイスに接続 */
+    abstract connectDevice(): Promise<void>;
+    /** デバイスを切断 */
+    abstract disconnectDevice(): Promise<void>;
+
     /** センサーの状態取得 */
-    abstract fetchSensorState(): Promise<AlcDriveState>;
+    abstract IsConnectDevice(): Promise<void>;
 
     /** センサーのスキャン開始 */
-    abstract startScanning(): Promise<AlcDriveState>;
+    abstract startScanning(): Promise<void>;
+
+    /** センサーのスキャン停止 */
+    abstract stopScanning(): Promise<void>;
 
     /** スキャン結果取得 */
-    abstract fetchAlcDriveResult(): Promise<AlcDriveResultodel>
+    abstract fetchAlcDriveResult(): Promise<void>
 }

@@ -8,25 +8,44 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace AlcoholDrive_Client.Service {
-    public class AlcoholDriveService {
+    public class AlcoholDriveService :BaseService{
 
         private readonly AlcoholDriveRepository repository;
-
-        public readonly Subject<int> CommandsSubject;
-
-        public readonly Subject<Exception> ErrorSubject;
-
-        public AlcoholDriveService(AlcoholDriveRepository repository) {
-            this.repository = repository;
-            CommandsSubject = new Subject<int>();
-            ErrorSubject = new Subject<Exception>();
-        }
-
+        private readonly MessageDeliveryService deliveryService;
 
         public bool IsConnect {
             get {
                 return repository.IsConnect;
             }
+        }
+
+        public AlcoholDriveService(AlcoholDriveRepository repository,
+            MessageDeliveryService deliveryService) : base() {
+            
+            this.repository = repository;
+            this.deliveryService = deliveryService;            
+
+            this.deliveryService.MessageSubject.Subscribe(message => {
+                int cmd = message.Item1;
+                if(ContainsCommand(cmd) == false) { return; }
+
+                //接続
+                if(cmd == DeviceCommands.CONNECT_DEVICE) {
+                    ConnectDrive();
+                }
+                //切断
+                if(cmd == DeviceCommands.DISCONNECT_DEVICE) {
+                    DisconnectDrive();
+                }
+                //デバイス接続確認
+                if(cmd == DeviceCommands.IS_CONNECT_DEVICE) {
+                    deliveryService.PostCommand(DeviceCommands.IS_CONNECT_DEVICE_RES, IsConnect);
+                }
+            });
+        }
+
+        protected override void InitCommandList() {
+            CommandList.AddRange(new int[] { DeviceCommands.CONNECT_DEVICE, DeviceCommands.DISCONNECT_DEVICE, DeviceCommands.IS_CONNECT_DEVICE, DeviceCommands.IS_CONNECT_DEVICE_RES });
         }
 
         /// <summary>
@@ -37,7 +56,7 @@ namespace AlcoholDrive_Client.Service {
             try {
                 return repository.ConnectDrive();
             } catch (Exception ex) {
-                ErrorSubject.OnNext(ex);
+                deliveryService.PostException(ex);
                 return false;
             }
         }
@@ -50,7 +69,7 @@ namespace AlcoholDrive_Client.Service {
             try {
                 return repository.DisconnectDrive();
             } catch (Exception ex) {
-                ErrorSubject.OnNext(ex);
+                deliveryService.PostException(ex);
                 return false;
             }
         }
@@ -61,9 +80,8 @@ namespace AlcoholDrive_Client.Service {
         public void StartScanning() {
             try {
                 repository.StartScanning();
-                CommandsSubject.OnNext(AlcoholDriveCommands.START_SCANNING);
             } catch (Exception ex) {
-                ErrorSubject.OnNext(ex);
+                deliveryService.PostException(ex);
             }
         }
 
@@ -73,9 +91,8 @@ namespace AlcoholDrive_Client.Service {
         public void StopScanning() {
             try {
                 repository.StopScanning();
-                CommandsSubject.OnNext(AlcoholDriveCommands.STOP_SCANNING);
             } catch (Exception ex) {
-                ErrorSubject.OnNext(ex);
+                deliveryService.PostException(ex);
             }
         }
 
@@ -88,10 +105,11 @@ namespace AlcoholDrive_Client.Service {
                 bool ret = repository.CheckAlcohol();
                 return ret;
             } catch (Exception ex) {
-                ErrorSubject.OnNext(ex);
+                deliveryService.PostException(ex);
                 return false;
             }
         }
+
 
     }
 }

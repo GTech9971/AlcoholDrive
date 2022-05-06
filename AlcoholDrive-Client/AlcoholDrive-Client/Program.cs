@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AlcoholDrive_Client.Infra.Repository;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,7 +14,9 @@ namespace AlcoholDrive_Client {
         static void Main() {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new AlcoholDriveForm());
+            Application.Run(new AlcoholDriveForm(
+                new MockAlcoholDriveRepository(),
+                new MockUserRepository()));
         }
     }
 }

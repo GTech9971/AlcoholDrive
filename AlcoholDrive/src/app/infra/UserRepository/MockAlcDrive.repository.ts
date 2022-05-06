@@ -8,23 +8,26 @@ import { AlcDriveRepository } from "src/app/domain/repositories/AlcDriveReposito
 })
 export class MockAlcDriveRepository extends AlcDriveRepository {
 
-
-    constructor() {
-        super();
+    connectDevice(): Promise<void> {
+        throw new Error("Method not implemented.");
+    }
+    disconnectDevice(): Promise<void> {
+        throw new Error("Method not implemented.");
+    }
+    IsConnectDevice(): Promise<void> {
+        throw new Error("Method not implemented.");
+    }
+    startScanning(): Promise<void> {
+        throw new Error("Method not implemented.");
+    }
+    stopScanning(): Promise<void> {
+        throw new Error("Method not implemented.");
+    }
+    fetchAlcDriveResult(): Promise<void> {
+        throw new Error("Method not implemented.");
     }
 
-    async fetchSensorState(): Promise<AlcDriveState> {
-        return AlcDriveState.CONNECTED;
-    }
 
-    async startScanning(): Promise<AlcDriveState> {
-        return AlcDriveState.SCANNING;
-    }
-    async fetchAlcDriveResult(): Promise<AlcDriveResultodel> {
-        return {
-            DrivableResult: true,
-            State: AlcDriveState.OK,
-        }
-    }
+
 
 }

@@ -37,14 +37,14 @@ export class AlcoholCheckPage implements OnInit, OnDestroy {
             this.user = await this.userService.getUser(id);
         });
 
-        this.alcDriveResult.State = await this.alcDriveService.fetchSensorState();
-        // TODO:Backgroundでチェックする
-        if (this.alcDriveResult.State === AlcDriveState.CONNECTED) {
-            this.alcDriveResult.State = await this.alcDriveService.startScanning();
-            if (this.alcDriveResult.State === AlcDriveState.SCANNING) {
-                //this.alcDriveResult = await this.alcDriveService.fetchAlcDriveResult();
-            }
-        }
+        // this.alcDriveResult.State = await this.alcDriveService.fetchSensorState();
+        // // TODO:Backgroundでチェックする
+        // if (this.alcDriveResult.State === AlcDriveState.CONNECTED) {
+        //     this.alcDriveResult.State = await this.alcDriveService.startScanning();
+        //     if (this.alcDriveResult.State === AlcDriveState.SCANNING) {
+        //         //this.alcDriveResult = await this.alcDriveService.fetchAlcDriveResult();
+        //     }
+        // }
 
     }
 
