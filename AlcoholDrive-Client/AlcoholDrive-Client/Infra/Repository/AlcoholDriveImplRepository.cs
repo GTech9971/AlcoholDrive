@@ -51,7 +51,9 @@ namespace AlcoholDrive_Client.Infra.Repository {
 
         public override bool ConnectDrive() {
             alcDevice = hidDeviceManager.SearchDevices(VID, PID).FirstOrDefault();
-            if(alcDevice == null) { return false; }
+            if (alcDevice == null) {
+                throw new AlcoholDeviceNotFoundException();
+            }
 
             _isConnect = alcDevice.Connect();
 
