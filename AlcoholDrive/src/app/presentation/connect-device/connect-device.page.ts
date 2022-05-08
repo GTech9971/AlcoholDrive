@@ -1,5 +1,6 @@
 import { Component, OnDestroy } from "@angular/core";
 import { Router } from "@angular/router";
+import { ToastController } from "@ionic/angular";
 import { Observable } from "rxjs";
 import { AlcDriveState } from "src/app/domain/model/AlcDriveState.model";
 import { AlcDriveService } from "src/app/domain/service/AlcDrive.service";
@@ -16,12 +17,15 @@ export class ConnectDevicePage implements OnDestroy {
     clickFlg: boolean = false;
 
     constructor(private alcService: AlcDriveService,
+        private toastCtrl:ToastController,
         private router: Router) {
 
         this.alcDriveStateObserver = this.alcService.AlcDriveStateObserver;
-        this.alcDriveStateObserver.subscribe(state => {
+        this.alcDriveStateObserver.subscribe(async state => {
             if (state === AlcDriveState.CONNECTED) {
-                this.router.navigate(['home']);
+                const toast:HTMLIonToastElement = await this.toastCtrl.create({message:'デバイスに接続しました。', duration:1500});
+                await toast.present();
+                await this.router.navigate(['home']);
             }
         });
     }

@@ -43,6 +43,20 @@ export class MessageDeliveryService {
         console.log(`Cmd:${cmd} Data:${jsonStr}`);
     }
 
+    /**
+     * クライアントから受信したことにする
+     * TEST用
+     * @param cmd 
+     * @param jsonStr 
+     */
+    public testRecievedMessage(cmd:number, jsonStr:string){
+        const message:MessageModel = {
+            Command:cmd,
+            JsonStr:jsonStr
+        };
+        this._messageSubject.next(message);
+    }
+
 }
 
 declare global {

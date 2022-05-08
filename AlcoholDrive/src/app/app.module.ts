@@ -1,4 +1,4 @@
-import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule, Provider } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
@@ -12,6 +12,21 @@ import { MockUserRepository } from './infra/UserRepository/MockUser.repository';
 import { AlcDriveRepository } from './domain/repositories/AlcDriveRepository/AlcDrive.repository';
 import { MockAlcDriveRepository } from './infra/AlcDriveRepository/MockAlcDrive.repository';
 import { AlcDriveImplRepository } from './infra/AlcDriveRepository/AlcDriveImpl.repository';
+import { UserImplRepository } from './infra/UserRepository/UseImpl.repository';
+
+// デバック
+const debug :Provider[]= [
+  { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+  { provide: UserRepository, useClass: MockUserRepository },
+  { provide: AlcDriveRepository, useClass: MockAlcDriveRepository },
+]
+
+
+const build:Provider[]=[
+  { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+  { provide: UserRepository, useClass: UserImplRepository },
+  { provide: AlcDriveRepository, useClass: AlcDriveImplRepository },
+]
 
 @NgModule({
   declarations: [AppComponent],
@@ -23,11 +38,7 @@ import { AlcDriveImplRepository } from './infra/AlcDriveRepository/AlcDriveImpl.
     AlcoholCheckModule,
     HttpClientModule,
   ],
-  providers: [
-    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    { provide: UserRepository, useClass: MockUserRepository },
-    { provide: AlcDriveRepository, useClass: AlcDriveImplRepository },
-  ],
+  providers: debug,
   bootstrap: [AppComponent],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA
