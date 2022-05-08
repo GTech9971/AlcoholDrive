@@ -17,7 +17,7 @@
 
   <ion-grid fixed>
     <ion-row>
-      <ng-container *ngFor="let user of this.userList">
+      <ng-container *ngFor="let user of this.userListObserver |async">
         <ion-col>
           <alc-user-card [user]="user" (click)="onClickUserCard(user)" [class.selected]="this.isSelected(user)">
           </alc-user-card>

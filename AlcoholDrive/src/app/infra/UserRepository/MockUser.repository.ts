@@ -12,13 +12,17 @@ export class MockUserRepository extends UserRepository {
         super();
     }
 
-    fetchUsers(): Promise<UserModel[]> {
-        return this.client.get<UserModel[]>("./assets/mock/user/data.json").toPromise();
+    getUsers(): Promise<void> {
+        throw new Error("Method not implemented.");
     }
-
-    async fetchUser(userId: number): Promise<UserModel> {
-        const users: UserModel[] = await this.fetchUsers();
-        return users.filter(u => u.UserId === userId)[0];
+    registryUser(user: UserModel): Promise<void> {
+        throw new Error("Method not implemented.");
+    }
+    deleteUser(userId: number): Promise<void> {
+        throw new Error("Method not implemented.");
+    }
+    setUserBoss(userId: number, bossId: number): Promise<void> {
+        throw new Error("Method not implemented.");
     }
 
 }

@@ -10,8 +10,8 @@ import { AlcoholCheckModule } from './presentation/alcohol-check/alcohol-check.m
 import { UserRepository } from './domain/repositories/UserRepository/User.repository';
 import { MockUserRepository } from './infra/UserRepository/MockUser.repository';
 import { AlcDriveRepository } from './domain/repositories/AlcDriveRepository/AlcDrive.repository';
-import { MockAlcDriveRepository } from './infra/UserRepository/MockAlcDrive.repository';
-import { AlcDriveImplRepository } from './infra/UserRepository/AlcDriveImpl.repository';
+import { MockAlcDriveRepository } from './infra/AlcDriveRepository/MockAlcDrive.repository';
+import { AlcDriveImplRepository } from './infra/AlcDriveRepository/AlcDriveImpl.repository';
 
 @NgModule({
   declarations: [AppComponent],

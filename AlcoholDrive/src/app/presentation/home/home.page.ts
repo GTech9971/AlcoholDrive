@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
 import { UserModel } from 'src/app/domain/model/User.model';
 import { UserService } from 'src/app/domain/service/User.service';
 
@@ -10,6 +11,7 @@ import { UserService } from 'src/app/domain/service/User.service';
 })
 export class HomePage implements OnInit {
 
+  userListObserver: Observable<UserModel[]>;
   userList: UserModel[];
 
   selectedUser: UserModel;
@@ -18,10 +20,15 @@ export class HomePage implements OnInit {
     private userService: UserService) {
     this.userList = [];
     this.selectedUser = undefined;
+    //購読
+    this.userListObserver = this.userService.UsersObserver;
+    this.userListObserver.subscribe(users => {
+      this.userList = users;
+    });
   }
 
   async ngOnInit() {
-    this.userList = await this.userService.fetchUsers();
+    await this.userService.getUsers();
   }
 
 
