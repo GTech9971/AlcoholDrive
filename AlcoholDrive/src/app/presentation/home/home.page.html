@@ -17,7 +17,7 @@
 
   <ion-grid fixed>
     <ion-row>
-      <ng-container *ngFor="let user of this.userListObserver |async">
+      <ng-container *ngFor="let user of this.userListObserver | async">
         <ion-col>
           <alc-user-card [user]="user" (click)="onClickUserCard(user)" [class.selected]="this.isSelected(user)">
           </alc-user-card>
@@ -26,9 +26,17 @@
     </ion-row>
   </ion-grid>
 
+  <!-- センサー開始ボタン -->
   <ion-fab horizontal="center" vertical="bottom" slot="fixed">
     <ion-fab-button color="danger" (click)="onClickAlcoholCheck()" [disabled]="this.selectedUser === undefined">
       <ion-icon name="beer-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+  <!-- ユーザ追加ボタン -->
+  <ion-fab horizontal="end" vertical="bottom" slot="fixed">
+    <ion-fab-button color="success">
+      <ion-icon name="add-outline"></ion-icon>
     </ion-fab-button>
   </ion-fab>
 

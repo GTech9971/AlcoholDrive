@@ -1,28 +1,46 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
+import { UserCommands } from "src/app/domain/model/commands/UserCommands.model";
 import { UserModel } from "src/app/domain/model/User.model";
 import { UserRepository } from "src/app/domain/repositories/UserRepository/User.repository";
+import { MessageDeliveryService } from "src/app/domain/service/MessageDelivery.service";
 
 @Injectable({
     providedIn: 'root'
 })
 export class MockUserRepository extends UserRepository {
 
-    constructor(private client: HttpClient) {
+    private _users: UserModel[];
+
+    constructor(private client: HttpClient,
+        private deliveryService: MessageDeliveryService) {
         super();
+        this._users = [];
     }
 
-    getUsers(): Promise<void> {
-        throw new Error("Method not implemented.");
+    async getUsers(): Promise<void> {
+        if (this._users.length === 0) {
+            this._users = await this.client.get<UserModel[]>('./assets/mock/user/data.json').toPromise();
+        }
+
+        this.deliveryService.testRecievedMessage(UserCommands.GET_USERS_RES, JSON.stringify(this._users));
     }
-    registryUser(user: UserModel): Promise<void> {
-        throw new Error("Method not implemented.");
+
+    async registryUser(user: UserModel): Promise<void> {
+        this._users.push(user);
     }
-    deleteUser(userId: number): Promise<void> {
-        throw new Error("Method not implemented.");
+
+    async deleteUser(userId: number): Promise<void> {
+        this._users = this._users.filter(u => u.UserId !== userId);
     }
-    setUserBoss(userId: number, bossId: number): Promise<void> {
-        throw new Error("Method not implemented.");
+
+    async setUserBoss(userId: number, bossId: number): Promise<void> {
+        const BOSS: UserModel = this._users.find(u => u.UserId === bossId);
+        this._users.forEach(u => {
+            if (u.UserId === userId) {
+                u.UserBoss = BOSS;
+            }
+        });
     }
 
 }

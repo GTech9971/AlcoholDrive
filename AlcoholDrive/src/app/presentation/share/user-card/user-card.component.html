@@ -1,11 +1,30 @@
 <ion-card tappable button="true">
-    <div style="margin-top: 10px;">
-        <ion-avatar class="ion-margin-start">
-            <ion-img [src]="this.getAvatorImagePath()"></ion-img>
-        </ion-avatar>
-    </div>
 
     <ion-card-header>
+
+        <ion-icon id="menu-button-{{this.user.UserId}}" style="float: right;" size="large"
+            name="ellipsis-vertical-outline">
+        </ion-icon>
+
+        <ion-popover #popver trigger="menu-button-{{this.user.UserId}}" [arrow]="true">
+            <ng-template>
+                <ion-list>
+                    <ion-item button="true" (click)="onClickDeleteUser(popver)">
+                        <ion-label color="danger">削除</ion-label>
+                        <ion-icon color="danger" name="trash-outline"></ion-icon>
+                    </ion-item>
+                </ion-list>
+            </ng-template>
+        </ion-popover>
+
+
+        <div style="margin-top: 10px;">
+            <ion-avatar class="ion-margin-start">
+                <ion-img [src]="this.getAvatorImagePath()"></ion-img>
+            </ion-avatar>
+        </div>
+
+
         <ion-card-subtitle>
             <span *ngIf="this.user.UserBoss">
                 {{this.user?.UserBoss?.UserName}}
