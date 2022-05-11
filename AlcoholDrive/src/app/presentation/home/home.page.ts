@@ -54,4 +54,9 @@ export class HomePage implements OnInit {
     await this.router.navigate(['check'], { queryParams: { userid: this.selectedUser.UserId } });
   }
 
+
+  onClickCloseModal(modal) {
+    modal.dismiss();
+  }
+
 }
