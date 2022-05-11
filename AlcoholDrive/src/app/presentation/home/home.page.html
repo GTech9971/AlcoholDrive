@@ -59,9 +59,33 @@
           </ion-toolbar>
         </ion-header>
 
+        <!-- ユーザ情報入力 -->
+        <form [formGroup]="this.formGroup">
+          <ion-list style="margin-top: 5px;">
+            <ion-item>
+              <ion-label position="stacked">ユーザ名</ion-label>
+              <ion-input formControlName="USER_NAME" type="text" placeholder="ユーザ名"></ion-input>
+            </ion-item>
 
+            <ion-item>
+              <ion-label position="stacked">上長設定</ion-label>
+              <ion-select formControlName="BOSS_ID" placeholder="上長を選択してください">
+                <ion-select-option [value]="user.UserId" *ngFor="let user of this.userListObserver | async">
+                  {{user.UserName}}
+                </ion-select-option>
+              </ion-select>
+            </ion-item>
 
+            <div style="display: flex; justify-content: center; margin-top: 10px;">
+              <ion-button type="submit" shape="round" (click)="onClickRegistryUserButton(modal)">
+                登録
+              </ion-button>
+            </div>
+
+          </ion-list>
+        </form>
       </ion-content>
+
     </ng-template>
   </ion-modal>
 

@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable, Subject } from "rxjs";
 import { AlcDriveResultodel } from "../model/AlcDriveResult.model";
 import { AlcDriveState } from "../model/AlcDriveState.model";
+import { AlcDriveCommands } from "../model/commands/AlcDriveCommands.model";
 import { DeviceCommands } from "../model/commands/DeviceCommands.model";
 import { AlcDriveRepository } from "../repositories/AlcDriveRepository/AlcDrive.repository";
 import { MessageDeliveryService } from "./MessageDelivery.service";
@@ -40,6 +41,16 @@ export class AlcDriveService {
                     this.nextAlcDriveState();
                 }
             }
+
+            // 結果受信
+            if (message.Command === AlcDriveCommands.SCAN_RESULT_RES) {
+                let isSuccess: boolean = message.JsonStr === "true" ? true : false;
+                this._alcDriveResult = {
+                    State: this._alcDriveState,
+                    DrivableResult: isSuccess
+                };
+                this.nextAlcDriveResult();
+            }
         });
     }
 
@@ -61,6 +72,7 @@ export class AlcDriveService {
         this.alcDriveStateSubject.next(this._alcDriveState);
     }
 
+
     public async startScanning(): Promise<void> {
         this.repository.startScanning();
     }
@@ -71,6 +83,10 @@ export class AlcDriveService {
 
     public async fetchAlcDriveResult(): Promise<void> {
         this.repository.fetchAlcDriveResult();
+    }
+
+    private nextAlcDriveResult() {
+        this.alcDriveResultSubject.next(this._alcDriveResult);
     }
 
 }
