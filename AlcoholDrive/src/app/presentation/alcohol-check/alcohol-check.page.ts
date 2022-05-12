@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
+import { Observable } from "rxjs";
 import { AlcDriveResultodel } from "src/app/domain/model/AlcDriveResult.model";
 import { AlcDriveState } from "src/app/domain/model/AlcDriveState.model";
 import { UserModel } from "src/app/domain/model/User.model";
@@ -13,21 +14,24 @@ import { UserService } from "src/app/domain/service/User.service";
 })
 export class AlcoholCheckPage implements OnInit, OnDestroy {
 
+    get STATE_SCANNING(): AlcDriveState { return AlcDriveState.SCANNING; }
+    get STATE_OK(): AlcDriveState { return AlcDriveState.OK; }
+
     user: UserModel;
 
     alcDriveResult: AlcDriveResultodel;
-
-    get STATE_SCANNING(): AlcDriveState { return AlcDriveState.SCANNING; }
-    get STATE_OK(): AlcDriveState { return AlcDriveState.OK; }
+    private alcDriveResultObserver: Observable<AlcDriveResultodel>;
 
     constructor(private userService: UserService,
         private alcDriveService: AlcDriveService,
         private route: ActivatedRoute) {
-        // TODO サービスから取得する
-        this.alcDriveResult = {
-            State: AlcDriveState.CONNECTED,
-            DrivableResult: false,
-        }
+
+        this.alcDriveResultObserver = this.alcDriveService.AlcDriveResultObserver;
+
+        // 購読
+        this.alcDriveResultObserver.subscribe(result => {
+            this.alcDriveResult = result;
+        });
     }
 
 
@@ -37,15 +41,7 @@ export class AlcoholCheckPage implements OnInit, OnDestroy {
             this.user = await this.userService.getUser(id);
         });
 
-        // this.alcDriveResult.State = await this.alcDriveService.fetchSensorState();
-        // // TODO:Backgroundでチェックする
-        // if (this.alcDriveResult.State === AlcDriveState.CONNECTED) {
-        //     this.alcDriveResult.State = await this.alcDriveService.startScanning();
-        //     if (this.alcDriveResult.State === AlcDriveState.SCANNING) {
-        //         //this.alcDriveResult = await this.alcDriveService.fetchAlcDriveResult();
-        //     }
-        // }
-
+        await this.alcDriveService.startScanning();
     }
 
     ngOnDestroy(): void {

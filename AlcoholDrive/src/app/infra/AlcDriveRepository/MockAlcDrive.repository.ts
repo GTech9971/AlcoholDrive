@@ -1,4 +1,6 @@
 import { Injectable } from "@angular/core";
+import { AlcDriveResultodel } from "src/app/domain/model/AlcDriveResult.model";
+import { AlcDriveState } from "src/app/domain/model/AlcDriveState.model";
 import { AlcDriveCommands } from "src/app/domain/model/commands/AlcDriveCommands.model";
 import { DeviceCommands } from "src/app/domain/model/commands/DeviceCommands.model";
 import { AlcDriveRepository } from "src/app/domain/repositories/AlcDriveRepository/AlcDrive.repository";
@@ -35,6 +37,16 @@ export class MockAlcDriveRepository extends AlcDriveRepository {
     }
 
     async fetchAlcDriveResult(): Promise<void> {
-        this.deliveryService.testRecievedMessage(AlcDriveCommands.SCAN_RESULT_RES, "true");
+        const result: AlcDriveResultodel = {
+            State: AlcDriveState.SCANNING,
+            DrivableResult: false
+        };
+        this.deliveryService.testRecievedMessage(AlcDriveCommands.SCAN_RESULT_RES, JSON.stringify(result));
+
+        setTimeout(() => {
+            result.State = AlcDriveState.OK;
+            result.DrivableResult = true;
+            this.deliveryService.testRecievedMessage(AlcDriveCommands.SCAN_RESULT_RES, JSON.stringify(result));
+        }, 1000);
     }
 }

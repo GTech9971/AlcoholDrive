@@ -44,11 +44,8 @@ export class AlcDriveService {
 
             // 結果受信
             if (message.Command === AlcDriveCommands.SCAN_RESULT_RES) {
-                let isSuccess: boolean = message.JsonStr === "true" ? true : false;
-                this._alcDriveResult = {
-                    State: this._alcDriveState,
-                    DrivableResult: isSuccess
-                };
+                const result: AlcDriveResultodel = JSON.parse(message.JsonStr);
+                this._alcDriveResult = result;
                 this.nextAlcDriveResult();
             }
         });
