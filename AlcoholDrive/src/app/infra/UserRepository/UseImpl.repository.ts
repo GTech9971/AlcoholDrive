@@ -1,8 +1,12 @@
+import { Injectable } from "@angular/core";
 import { UserCommands } from "src/app/domain/model/commands/UserCommands.model";
 import { UserModel } from "src/app/domain/model/User.model";
 import { UserRepository } from "src/app/domain/repositories/UserRepository/User.repository";
 import { MessageDeliveryService } from "src/app/domain/service/MessageDelivery.service";
 
+@Injectable({
+    providedIn: 'root'
+})
 export class UserImplRepository extends UserRepository {
 
     constructor(private deliveryService: MessageDeliveryService) {

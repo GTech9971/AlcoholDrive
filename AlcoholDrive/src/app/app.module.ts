@@ -43,7 +43,7 @@ const build: Provider[] = [
     AlcoholCheckModule,
     HttpClientModule,
   ],
-  providers: debug,
+  providers: build,
   bootstrap: [AppComponent],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA

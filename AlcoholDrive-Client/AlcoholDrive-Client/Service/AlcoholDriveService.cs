@@ -1,5 +1,7 @@
 ﻿using AlcoholDrive_Client.Model;
+using AlcoholDrive_Client.Model.Response;
 using AlcoholDrive_Client.Repository;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,11 +10,15 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace AlcoholDrive_Client.Service {
-    public class AlcoholDriveService :BaseService{
+    public class AlcoholDriveService {
 
+        private AlcDriveState _state;
         private readonly AlcoholDriveRepository repository;
         private readonly MessageDeliveryService deliveryService;
 
+        /// <summary>
+        /// true:接続, false:切断
+        /// </summary>
         public bool IsConnect {
             get {
                 return repository.IsConnect;
@@ -21,14 +27,14 @@ namespace AlcoholDrive_Client.Service {
 
         public AlcoholDriveService(AlcoholDriveRepository repository,
             MessageDeliveryService deliveryService) : base() {
-            
+
+            this._state = AlcDriveState.NONE;
             this.repository = repository;
             this.deliveryService = deliveryService;            
 
             this.deliveryService.MessageSubject.Subscribe(message => {
                 int cmd = message.Item1;
-                if(ContainsCommand(cmd) == false) { return; }
-
+                
                 //接続
                 if(cmd == DeviceCommands.CONNECT_DEVICE) {
                     ConnectDrive();
@@ -41,11 +47,17 @@ namespace AlcoholDrive_Client.Service {
                 if(cmd == DeviceCommands.IS_CONNECT_DEVICE) {
                     deliveryService.PostCommand(DeviceCommands.IS_CONNECT_DEVICE_RES, IsConnect);
                 }
-            });
-        }
 
-        protected override void InitCommandList() {
-            CommandList.AddRange(new int[] { DeviceCommands.CONNECT_DEVICE, DeviceCommands.DISCONNECT_DEVICE, DeviceCommands.IS_CONNECT_DEVICE, DeviceCommands.IS_CONNECT_DEVICE_RES });
+                //スキャン開始 結果送信
+                if(cmd == AlcoholDriveFrontCommands.START_SCANNING) {
+                    StartScanning();
+                }
+
+                //スキャン停止
+                if(cmd == AlcoholDriveFrontCommands.STOP_SCANNING) {
+                    StopScanning();
+                }
+            });
         }
 
         /// <summary>
@@ -54,8 +66,10 @@ namespace AlcoholDrive_Client.Service {
         /// <returns></returns>
         public bool ConnectDrive() {
             try {
+                this._state = AlcDriveState.CONNECTED;
                 return repository.ConnectDrive();
             } catch (Exception ex) {
+                this._state = AlcDriveState.FAIL;
                 deliveryService.PostException(ex);
                 return false;
             }
@@ -67,8 +81,10 @@ namespace AlcoholDrive_Client.Service {
         /// <returns></returns>
         public bool DisconnectDrive() {
             try {
+                this._state = AlcDriveState.DISCONNECT;
                 return repository.DisconnectDrive();
             } catch (Exception ex) {
+                this._state = AlcDriveState.FAIL;
                 deliveryService.PostException(ex);
                 return false;
             }
@@ -79,8 +95,23 @@ namespace AlcoholDrive_Client.Service {
         /// </summary>
         public void StartScanning() {
             try {
+                //スキャン開始
                 repository.StartScanning();
+                AlcDriveResult alcDriveResult = new AlcDriveResult();
+                alcDriveResult.DrivableResult = false;
+                alcDriveResult.State = AlcDriveState.SCANNING;
+                string json = JsonConvert.SerializeObject(alcDriveResult);
+                this.deliveryService.PostCommand(AlcoholDriveFrontCommands.SCAN_RESULT, json);
+
+
+                //結果送信                
+                alcDriveResult.DrivableResult = repository.CheckAlcohol();
+                this._state = AlcDriveState.OK;
+                alcDriveResult.State = this._state;
+                json = JsonConvert.SerializeObject(alcDriveResult);
+                this.deliveryService.PostCommand(AlcoholDriveFrontCommands.SCAN_RESULT, json);
             } catch (Exception ex) {
+                this._state = AlcDriveState.FAIL;
                 deliveryService.PostException(ex);
             }
         }
@@ -91,7 +122,9 @@ namespace AlcoholDrive_Client.Service {
         public void StopScanning() {
             try {
                 repository.StopScanning();
+                this._state = AlcDriveState.CONNECTED;
             } catch (Exception ex) {
+                this._state = AlcDriveState.FAIL;
                 deliveryService.PostException(ex);
             }
         }
@@ -105,6 +138,7 @@ namespace AlcoholDrive_Client.Service {
                 bool ret = repository.CheckAlcohol();
                 return ret;
             } catch (Exception ex) {
+                this._state = AlcDriveState.FAIL;
                 deliveryService.PostException(ex);
                 return false;
             }

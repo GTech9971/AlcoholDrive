@@ -29,7 +29,7 @@ export class MessageDeliveryService {
                 JsonStr: jsonStr
             };
             this._messageSubject.next(model);
-            alert(`Cmd:${model.Command} Data:${model.JsonStr}`);
+            console.log(`Cmd:${model.Command} Data:${model.JsonStr}`);
         });
     }
 
@@ -49,10 +49,10 @@ export class MessageDeliveryService {
      * @param cmd 
      * @param jsonStr 
      */
-    public testRecievedMessage(cmd:number, jsonStr:string){
-        const message:MessageModel = {
-            Command:cmd,
-            JsonStr:jsonStr
+    public testRecievedMessage(cmd: number, jsonStr: string) {
+        const message: MessageModel = {
+            Command: cmd,
+            JsonStr: jsonStr
         };
         this._messageSubject.next(message);
     }

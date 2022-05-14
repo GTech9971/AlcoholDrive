@@ -78,9 +78,6 @@ export class AlcDriveService {
         this.repository.stopScanning();
     }
 
-    public async fetchAlcDriveResult(): Promise<void> {
-        this.repository.fetchAlcDriveResult();
-    }
 
     private nextAlcDriveResult() {
         this.alcDriveResultSubject.next(this._alcDriveResult);

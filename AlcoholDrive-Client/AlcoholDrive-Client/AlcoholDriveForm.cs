@@ -19,17 +19,19 @@ namespace AlcoholDrive_Client {
 
         private readonly AlcoholDriveService alcService;
         private readonly UserService userService;
+        private readonly NotificationService notificationService;
         private readonly MessageDeliveryService deliveryService;
 
         public AlcoholDriveForm(AlcoholDriveRepository alcoholDriveRepository,
-            UserRepository userRepository) {
+            UserRepository userRepository,
+            NotificationRepository notificationRepository) {
 
             InitializeComponent();
 
             deliveryService = new MessageDeliveryService(webView21);
             alcService = new AlcoholDriveService(alcoholDriveRepository, deliveryService);
             userService = new UserService(userRepository, deliveryService);
-
+            notificationService = new NotificationService(notificationRepository, deliveryService);
 
             webView21.WebMessageReceived += WebView21_WebMessageReceived;
         }

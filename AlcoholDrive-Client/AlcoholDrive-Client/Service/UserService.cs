@@ -11,19 +11,18 @@ namespace AlcoholDrive_Client.Service {
     /// <summary>
     /// ユーザサービス
     /// </summary>
-    public class UserService : BaseService {
+    public class UserService {
 
         private readonly UserRepository repository;
         private readonly MessageDeliveryService deliveryService;
 
         public UserService(UserRepository repository,
-            MessageDeliveryService deliveryService) : base() {
+            MessageDeliveryService deliveryService) {
             this.deliveryService = deliveryService;
             this.repository = repository;
 
             //購読
             this.deliveryService.MessageSubject.Subscribe(message => {
-                if (ContainsCommand(message.Item1) == false) { return; }
                 int cmd = message.Item1;
                 //ユーザ取得
                 if (cmd == UserCommands.GET_USER) {
@@ -39,8 +38,8 @@ namespace AlcoholDrive_Client.Service {
 
                 //ユーザ削除
                 if (cmd == UserCommands.DEL_USER) {
-                    var user = JsonConvert.DeserializeObject<UserModel>(message.Item2);
-                    DeleteUser(user.UserId);
+                    int userId = int.Parse(message.Item2);
+                    DeleteUser(userId);
                     var users = GetUsers();
                 }
 
@@ -52,10 +51,6 @@ namespace AlcoholDrive_Client.Service {
                     SetUserBoss(userId, bossId);
                 }
             });
-        }
-
-        protected override void InitCommandList() {
-            CommandList.AddRange(new int[] { UserCommands.GET_USER, UserCommands.GET_USER_RES, UserCommands.REGISTRY_USER, UserCommands.DEL_USER, UserCommands.SET_USER_BOSS });
         }
 
 

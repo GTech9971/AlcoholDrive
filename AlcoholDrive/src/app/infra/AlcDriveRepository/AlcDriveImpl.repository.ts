@@ -1,6 +1,5 @@
 import { Injectable } from "@angular/core";
-import { AlcDriveResultodel } from "src/app/domain/model/AlcDriveResult.model";
-import { AlcDriveState } from "src/app/domain/model/AlcDriveState.model";
+import { AlcDriveCommands } from "src/app/domain/model/commands/AlcDriveCommands.model";
 import { DeviceCommands } from "src/app/domain/model/commands/DeviceCommands.model";
 import { AlcDriveRepository } from "src/app/domain/repositories/AlcDriveRepository/AlcDrive.repository";
 import { MessageDeliveryService } from "src/app/domain/service/MessageDelivery.service";
@@ -27,14 +26,15 @@ export class AlcDriveImplRepository extends AlcDriveRepository {
     }
 
     async startScanning(): Promise<void> {
-
+        this.deliveryService.postMessage(AlcDriveCommands.START_SCANNING, "");
     }
 
     async stopScanning(): Promise<void> {
+        this.deliveryService.postMessage(AlcDriveCommands.STOP_SCANNING, "");
     }
 
     async fetchAlcDriveResult(): Promise<void> {
-        throw new Error("Method not implemented.");
+
     }
 
 }
