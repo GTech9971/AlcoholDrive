@@ -19,7 +19,7 @@ namespace AlcoholDrive_Client {
             Application.SetCompatibleTextRenderingDefault(false);
 
             Application.Run(new AlcoholDriveForm(
-                new MockAlcoholDriveRepository(),
+                new AlcoholDriveImplRepository(),
                 new UserImplRepository(),
                 new NotificationImplRepository()
                 ));
