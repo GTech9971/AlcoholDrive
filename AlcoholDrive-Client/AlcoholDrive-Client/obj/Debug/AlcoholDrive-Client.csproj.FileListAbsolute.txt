@@ -22,8 +22,6 @@ C:\Users\georg\source\repos\AlcoholDrive-Client\AlcoholDrive-Client\bin\Debug\Mi
 C:\Users\georg\source\repos\AlcoholDrive-Client\AlcoholDrive-Client\bin\Debug\Microsoft.Web.WebView2.Core.xml
 C:\Users\georg\source\repos\AlcoholDrive-Client\AlcoholDrive-Client\bin\Debug\Microsoft.Web.WebView2.WinForms.xml
 C:\Users\georg\source\repos\AlcoholDrive-Client\AlcoholDrive-Client\bin\Debug\Microsoft.Web.WebView2.Wpf.xml
-C:\Users\georg\Documents\GitHub\AlcoholDrive\AlcoholDrive-Client\AlcoholDrive-Client\bin\Debug\hidapi32.dll
-C:\Users\georg\Documents\GitHub\AlcoholDrive\AlcoholDrive-Client\AlcoholDrive-Client\bin\Debug\hidapi64.dll
 C:\Users\georg\Documents\GitHub\AlcoholDrive\AlcoholDrive-Client\AlcoholDrive-Client\bin\Debug\runtimes\win-x86\native\WebView2Loader.dll
 C:\Users\georg\Documents\GitHub\AlcoholDrive\AlcoholDrive-Client\AlcoholDrive-Client\bin\Debug\runtimes\win-x64\native\WebView2Loader.dll
 C:\Users\georg\Documents\GitHub\AlcoholDrive\AlcoholDrive-Client\AlcoholDrive-Client\bin\Debug\runtimes\win-arm64\native\WebView2Loader.dll

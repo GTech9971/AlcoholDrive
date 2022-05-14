@@ -40,5 +40,12 @@ namespace AlcoholDrive_Client.Model {
         /// 上長モデル
         /// </summary>
         public UserModel UserBoss { get; set; }
+
+        public UserModel() {
+            UserId = -1;
+            UserName = "";
+            UserImagePath = "";
+            BossId = -1;
+        }
     }
 }

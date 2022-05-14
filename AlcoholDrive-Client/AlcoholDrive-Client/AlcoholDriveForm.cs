@@ -2,13 +2,6 @@
 using AlcoholDrive_Client.Service;
 using Microsoft.Web.WebView2.Core;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace AlcoholDrive_Client {
@@ -39,12 +32,7 @@ namespace AlcoholDrive_Client {
         private async void AlcoholDriveForm_Load(object sender, EventArgs e) {
             await webView21.EnsureCoreWebView2Async();
             webView21.CoreWebView2.SetVirtualHostNameToFolderMapping("alcdrive.com", FOLDER_PATH, CoreWebView2HostResourceAccessKind.Allow);
-            webView21.CoreWebView2.Navigate(URL_PATH);            
-            alcService.ConnectDrive();
-
-            await Task.Delay(1000);
-
-            deliveryService.PostCommand(20, "sample");
+            webView21.CoreWebView2.Navigate(URL_PATH);                        
         }
 
         /// <summary>
@@ -55,7 +43,6 @@ namespace AlcoholDrive_Client {
         private void WebView21_WebMessageReceived(object sender, CoreWebView2WebMessageReceivedEventArgs e) {
             deliveryService.RecievedMessage(e.TryGetWebMessageAsString());
         }
-
 
     }
 }

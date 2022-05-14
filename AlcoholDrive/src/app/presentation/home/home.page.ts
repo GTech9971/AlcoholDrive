@@ -86,6 +86,7 @@ export class HomePage implements OnInit {
     const user: UserModel = {
       UserName: USER_NAME,
       UserId: -1,
+      BossId: BOSS?.UserId,
       UserBoss: BOSS,
       UserImagePath: ''
     };
