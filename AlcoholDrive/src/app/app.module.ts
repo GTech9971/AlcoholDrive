@@ -13,19 +13,24 @@ import { AlcDriveRepository } from './domain/repositories/AlcDriveRepository/Alc
 import { MockAlcDriveRepository } from './infra/AlcDriveRepository/MockAlcDrive.repository';
 import { AlcDriveImplRepository } from './infra/AlcDriveRepository/AlcDriveImpl.repository';
 import { UserImplRepository } from './infra/UserRepository/UseImpl.repository';
+import { NotificationRepository } from './domain/repositories/NotificationRepository/Notification.repository';
+import { NotificationImplRepository } from './infra/NotificationRepository/NotificationImpl.repository';
+import { MockNotificationRepository } from './infra/NotificationRepository/MockNotification.repository';
 
 // デバック
-const debug :Provider[]= [
+const debug: Provider[] = [
   { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
   { provide: UserRepository, useClass: MockUserRepository },
   { provide: AlcDriveRepository, useClass: MockAlcDriveRepository },
+  { provide: NotificationRepository, useClass: MockNotificationRepository },
 ]
 
 
-const build:Provider[]=[
+const build: Provider[] = [
   { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
   { provide: UserRepository, useClass: UserImplRepository },
   { provide: AlcDriveRepository, useClass: AlcDriveImplRepository },
+  { provide: NotificationRepository, useClass: NotificationImplRepository },
 ]
 
 @NgModule({

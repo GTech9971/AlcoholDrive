@@ -2,8 +2,10 @@ import { Component, Input, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { ToastController } from "@ionic/angular";
 import { AlcDriveResultodel } from "src/app/domain/model/AlcDriveResult.model";
+import { SendAlcResultModel } from "src/app/domain/model/SendAlcResult.model";
 import { UserModel } from "src/app/domain/model/User.model";
 import { AlcDriveService } from "src/app/domain/service/AlcDrive.service";
+import { NotificationService } from "src/app/domain/service/Notification.service";
 
 @Component({
     selector: 'alc-check-result',
@@ -16,7 +18,19 @@ export class AlcCheckResultComponent implements OnInit {
 
     @Input() alcDriveResult: AlcDriveResultodel;
 
+    /** Slackが有効かどうか */
+    get IsEnableSlack(): boolean {
+        return this.notificationService.IsEnableSlack;
+    }
+
+    /** メールが有効かどうか */
+    get IsEnableMail(): boolean {
+        //TODO 
+        return false;
+    }
+
     constructor(private alcDriveService: AlcDriveService,
+        private notificationService: NotificationService,
         private toastCtrl: ToastController,
         private router: Router) { }
 
@@ -32,7 +46,7 @@ export class AlcCheckResultComponent implements OnInit {
      * 検査結果をメールで送る
      */
     async onClickSendResultMail() {
-        // TODO
+        if (this.IsEnableMail === false) { return; }
         await this.showToast();
         await this.router.navigate(['home']);
     }
@@ -41,7 +55,14 @@ export class AlcCheckResultComponent implements OnInit {
      * 検査結果をSlackで送る
      */
     async onClickSendResultSlack() {
-        // TODO
+        if (this.IsEnableSlack === false) { return; }
+        const result: SendAlcResultModel = {
+            AlcCheckResult: this.alcDriveResult.DrivableResult,
+            User: this.user,
+            Message: ''
+        };
+
+        await this.notificationService.sendSlack(result);
         await this.showToast();
         await this.router.navigate(['home']);
     }
