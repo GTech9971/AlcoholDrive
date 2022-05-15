@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, Input, OnDestroy, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { ToastController } from "@ionic/angular";
 import { AlcDriveResultodel } from "src/app/domain/model/AlcDriveResult.model";
@@ -12,7 +12,7 @@ import { NotificationService } from "src/app/domain/service/Notification.service
     templateUrl: './alc-check-result.component.html',
     styleUrls: ['./alc-check-result.component.scss']
 })
-export class AlcCheckResultComponent implements OnInit {
+export class AlcCheckResultComponent implements OnInit, OnDestroy {
 
     @Input() user: UserModel;
 
@@ -34,7 +34,13 @@ export class AlcCheckResultComponent implements OnInit {
         private toastCtrl: ToastController,
         private router: Router) { }
 
+
+
     ngOnInit(): void {
+    }
+
+    async ngOnDestroy() {
+        await this.alcDriveService.stopScanning();
     }
 
     private async showToast() {
@@ -70,6 +76,12 @@ export class AlcCheckResultComponent implements OnInit {
 
         await this.notificationService.sendSlack(result);
         await this.showToast();
+        await this.router.navigate(['home']);
+    }
+
+    /** ホームに戻る */
+    async onClickBackHome() {
+        await this.alcDriveService.stopScanning();
         await this.router.navigate(['home']);
     }
 

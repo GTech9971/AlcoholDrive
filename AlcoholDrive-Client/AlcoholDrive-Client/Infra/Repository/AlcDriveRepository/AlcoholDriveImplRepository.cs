@@ -87,6 +87,10 @@ namespace AlcoholDrive_Client.Infra.Repository {
                 throw new AlcoholDeviceNotFoundException();
             }
 
+            if (alcDevice == null) {
+                this.ConnectDrive();
+            }
+
             if (alcDevice.Write(cmds) == -1) {
                 throw new AlcoholDeviceIOException(alcDevice?.Manufacturer(), alcDevice?.Product());
             }
@@ -105,6 +109,10 @@ namespace AlcoholDrive_Client.Infra.Repository {
         private bool Read2Device(ref byte[] data) {
             if (_isConnect == false) {
                 throw new AlcoholDeviceNotFoundException();
+            }
+
+            if (this.alcDevice == null) {
+                this.ConnectDrive();
             }
 
             if (data.Length != DATA_SIZE) {

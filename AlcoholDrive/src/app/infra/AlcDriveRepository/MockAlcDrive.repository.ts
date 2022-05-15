@@ -45,7 +45,7 @@ export class MockAlcDriveRepository extends AlcDriveRepository {
 
         setTimeout(() => {
             result.State = AlcDriveState.OK;
-            result.DrivableResult = false;
+            result.DrivableResult = true;
             this.deliveryService.testRecievedMessage(AlcDriveCommands.SCAN_RESULT_RES, JSON.stringify(result));
         }, 1000);
     }

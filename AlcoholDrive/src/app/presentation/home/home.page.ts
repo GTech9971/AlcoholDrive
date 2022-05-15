@@ -27,7 +27,7 @@ export class HomePage implements OnInit {
   constructor(private router: Router,
     private formBuilder: FormBuilder,
     private alertCtrl: AlertController,
-    private userService: UserService) {
+    private userService: UserService,) {
     this.userList = [];
     this.selectedUser = undefined;
     //購読
@@ -56,10 +56,14 @@ export class HomePage implements OnInit {
   }
 
   isSelected(user: UserModel): boolean {
-    return this.selectedUser === user;
+    if (user === undefined) { return false; }
+    return this.selectedUser?.UserId === user?.UserId;
   }
 
 
+  /**
+   * アルコール検知ページに移動
+   */
   async onClickAlcoholCheck() {
     await this.router.navigate(['check'], { queryParams: { userid: this.selectedUser.UserId } });
   }

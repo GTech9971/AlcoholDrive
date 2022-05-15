@@ -52,5 +52,14 @@ namespace AlcoholDrive_Client {
         private void AlcoholDriveForm_FormClosed(object sender, FormClosedEventArgs e) {
             this.alcService.DisconnectDrive();
         }
+
+        /// <summary>
+        /// アプリケーションを終了する
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void existMenuItem_Click(object sender, EventArgs e) {
+            Application.Exit();
+        }
     }
 }

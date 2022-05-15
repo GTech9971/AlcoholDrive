@@ -3,11 +3,11 @@
 
     <ion-grid fixed>
 
-        <ng-container *ngIf="this.alcDriveResult.State === this.STATE_SCANNING">
+        <ng-container *ngIf="this.alcDriveResult?.State === this.STATE_SCANNING">
             <alc-check-start></alc-check-start>
         </ng-container>
 
-        <ng-container *ngIf="this.alcDriveResult.State === this.STATE_OK">
+        <ng-container *ngIf="this.alcDriveResult?.State === this.STATE_OK">
             <alc-check-result [user]=" this.user" [alcDriveResult]="this.alcDriveResult">
             </alc-check-result>
         </ng-container>

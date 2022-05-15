@@ -26,6 +26,7 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.webView21 = new Microsoft.Web.WebView2.WinForms.WebView2();
+            this.existMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.webView21)).BeginInit();
             this.SuspendLayout();
@@ -43,6 +44,8 @@
             // 
             // fileMenuItem
             // 
+            this.fileMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.existMenuItem});
             this.fileMenuItem.Name = "fileMenuItem";
             this.fileMenuItem.Size = new System.Drawing.Size(82, 24);
             this.fileMenuItem.Text = "ファイル(&F)";
@@ -59,6 +62,13 @@
             this.webView21.Size = new System.Drawing.Size(1193, 667);
             this.webView21.TabIndex = 1;
             this.webView21.ZoomFactor = 1D;
+            // 
+            // existMenuItem
+            // 
+            this.existMenuItem.Name = "existMenuItem";
+            this.existMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.existMenuItem.Text = "終了(&X)";
+            this.existMenuItem.Click += new System.EventHandler(this.existMenuItem_Click);
             // 
             // AlcoholDriveForm
             // 
@@ -86,5 +96,6 @@
         private System.Windows.Forms.MenuStrip menuStrip1;
         private Microsoft.Web.WebView2.WinForms.WebView2 webView21;
         private System.Windows.Forms.ToolStripMenuItem fileMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem existMenuItem;
     }
 }
