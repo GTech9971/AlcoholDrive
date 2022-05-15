@@ -48,7 +48,7 @@ export class HomePage implements OnInit {
       return;
     }
 
-    if (this.selectedUser === user) {
+    if (this.selectedUser.UserId === user.UserId) {
       this.selectedUser = undefined;
     } else {
       this.selectedUser = user;

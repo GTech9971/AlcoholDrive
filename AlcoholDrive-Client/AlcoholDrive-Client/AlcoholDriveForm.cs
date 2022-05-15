@@ -32,7 +32,7 @@ namespace AlcoholDrive_Client {
         private async void AlcoholDriveForm_Load(object sender, EventArgs e) {
             await webView21.EnsureCoreWebView2Async();
             webView21.CoreWebView2.SetVirtualHostNameToFolderMapping("alcdrive.com", FOLDER_PATH, CoreWebView2HostResourceAccessKind.Allow);
-            webView21.CoreWebView2.Navigate(URL_PATH);                        
+            webView21.CoreWebView2.Navigate(URL_PATH);
         }
 
         /// <summary>
@@ -44,5 +44,13 @@ namespace AlcoholDrive_Client {
             deliveryService.RecievedMessage(e.TryGetWebMessageAsString());
         }
 
+        /// <summary>
+        /// デバイスを切断する
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void AlcoholDriveForm_FormClosed(object sender, FormClosedEventArgs e) {
+            this.alcService.DisconnectDrive();
+        }
     }
 }

@@ -7,8 +7,8 @@ using System.Linq;
 using System.Threading;
 
 namespace AlcoholDrive_Client.Infra.Repository {
-    
-    public class AlcoholDriveImplRepository : AlcoholDriveRepository{
+
+    public class AlcoholDriveImplRepository : AlcoholDriveRepository {
         /// <summary>
         /// デバイスのベンダーID
         /// </summary>
@@ -62,12 +62,12 @@ namespace AlcoholDrive_Client.Infra.Repository {
         }
 
         public override bool DisconnectDrive() {
-            if(IsConnect == false || alcDevice == null) {
+            if (IsConnect == false || alcDevice == null) {
                 _isConnect = false;
                 return false;
             }
 
-            if(alcDevice.Disconnect() == false) {
+            if (alcDevice.Disconnect() == false) {
                 return false;
             } else {
                 _isConnect = false;
@@ -86,7 +86,7 @@ namespace AlcoholDrive_Client.Infra.Repository {
             if (_isConnect == false) {
                 throw new AlcoholDeviceNotFoundException();
             }
-            
+
             if (alcDevice.Write(cmds) == -1) {
                 throw new AlcoholDeviceIOException(alcDevice?.Manufacturer(), alcDevice?.Product());
             }
@@ -103,15 +103,15 @@ namespace AlcoholDrive_Client.Infra.Repository {
         /// <exception cref="ArgumentException"></exception>
         /// <exception cref="AlcoholDeviceIOException"></exception>
         private bool Read2Device(ref byte[] data) {
-            if(_isConnect == false) {
+            if (_isConnect == false) {
                 throw new AlcoholDeviceNotFoundException();
             }
 
-            if(data.Length != DATA_SIZE) {
+            if (data.Length != DATA_SIZE) {
                 throw new ArgumentException("データ格納サイズが64以外");
             }
 
-            if(alcDevice.Read(data, data.Length) == -1) {
+            if (alcDevice.Read(data, data.Length) == -1) {
                 throw new AlcoholDeviceIOException(alcDevice?.Manufacturer(), alcDevice?.Product());
             }
 
@@ -122,12 +122,18 @@ namespace AlcoholDrive_Client.Infra.Repository {
             byte[] cmds = new byte[DATA_SIZE];
             cmds[0] = AlcoholDriveCommands.START_SCANNING;
             Write2Device(cmds);
+
+            //TODO なくてもいい 雰囲気のため
+            Thread.Sleep(1000);
         }
 
         public override void StopScanning() {
             byte[] cmds = new byte[DATA_SIZE];
             cmds[0] = AlcoholDriveCommands.STOP_SCANNING;
             Write2Device(cmds);
+
+            //TODO なくてもいい 雰囲気のため
+            Thread.Sleep(1000);
         }
 
         public override bool CheckAlcohol() {
@@ -141,7 +147,7 @@ namespace AlcoholDrive_Client.Infra.Repository {
                 return true;
             }
 
-            if(data[0] == AlcoholDriveCommands.ALCOHOL_NG) {
+            if (data[0] == AlcoholDriveCommands.ALCOHOL_NG) {
                 return false;
             }
 

@@ -47,6 +47,9 @@ export class AlcCheckResultComponent implements OnInit {
      */
     async onClickSendResultMail() {
         if (this.IsEnableMail === false) { return; }
+
+        await this.alcDriveService.stopScanning();
+
         await this.showToast();
         await this.router.navigate(['home']);
     }
@@ -56,6 +59,9 @@ export class AlcCheckResultComponent implements OnInit {
      */
     async onClickSendResultSlack() {
         if (this.IsEnableSlack === false) { return; }
+
+        await this.alcDriveService.stopScanning();
+
         const result: SendAlcResultModel = {
             AlcCheckResult: this.alcDriveResult.DrivableResult,
             User: this.user,

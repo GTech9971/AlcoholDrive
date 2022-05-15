@@ -24,21 +24,28 @@
         /// </summary>
         private void InitializeComponent() {
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.webView21 = new Microsoft.Web.WebView2.WinForms.WebView2();
             this.fileMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.webView21 = new Microsoft.Web.WebView2.WinForms.WebView2();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.webView21)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip1
             // 
+            this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(895, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(1193, 28);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
+            // 
+            // fileMenuItem
+            // 
+            this.fileMenuItem.Name = "fileMenuItem";
+            this.fileMenuItem.Size = new System.Drawing.Size(82, 24);
+            this.fileMenuItem.Text = "ファイル(&F)";
             // 
             // webView21
             // 
@@ -46,28 +53,25 @@
             this.webView21.CreationProperties = null;
             this.webView21.DefaultBackgroundColor = System.Drawing.Color.White;
             this.webView21.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.webView21.Location = new System.Drawing.Point(0, 24);
+            this.webView21.Location = new System.Drawing.Point(0, 28);
+            this.webView21.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.webView21.Name = "webView21";
-            this.webView21.Size = new System.Drawing.Size(895, 532);
+            this.webView21.Size = new System.Drawing.Size(1193, 667);
             this.webView21.TabIndex = 1;
             this.webView21.ZoomFactor = 1D;
             // 
-            // fileMenuItem
-            // 
-            this.fileMenuItem.Name = "fileMenuItem";
-            this.fileMenuItem.Size = new System.Drawing.Size(67, 20);
-            this.fileMenuItem.Text = "ファイル(&F)";
-            // 
             // AlcoholDriveForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(895, 556);
+            this.ClientSize = new System.Drawing.Size(1193, 695);
             this.Controls.Add(this.webView21);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "AlcoholDriveForm";
             this.Text = "AlcoholDriveForm";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.AlcoholDriveForm_FormClosed);
             this.Load += new System.EventHandler(this.AlcoholDriveForm_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
