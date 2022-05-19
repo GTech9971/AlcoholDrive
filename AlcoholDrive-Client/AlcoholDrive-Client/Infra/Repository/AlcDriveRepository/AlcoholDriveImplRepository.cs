@@ -148,9 +148,6 @@ namespace AlcoholDrive_Client.Infra.Repository {
             byte[] data = new byte[DATA_SIZE];
             Read2Device(ref data);
 
-            //TODO なくてもいい 雰囲気のため
-            Thread.Sleep(3000);
-
             if (data[0] == AlcoholDriveCommands.ALCOHOL_OK) {
                 return true;
             }
