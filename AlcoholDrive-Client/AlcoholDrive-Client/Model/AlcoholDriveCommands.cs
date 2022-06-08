@@ -22,5 +22,9 @@ namespace AlcoholDrive_Client.Model {
         /// スキャン停止
         /// </summary>
         public static readonly byte STOP_SCANNING = 0x70;
+        /// <summary>
+        /// アルコール値読み取り
+        /// </summary>
+        public static readonly byte READING_ALCOHOL = 0x60;
     }
 }

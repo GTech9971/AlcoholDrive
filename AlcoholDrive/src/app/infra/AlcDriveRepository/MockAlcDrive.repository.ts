@@ -39,7 +39,8 @@ export class MockAlcDriveRepository extends AlcDriveRepository {
     async fetchAlcDriveResult(): Promise<void> {
         const result: AlcDriveResultodel = {
             State: AlcDriveState.SCANNING,
-            DrivableResult: false
+            DrivableResult: false,
+            BAC: 0.32,
         };
         this.deliveryService.testRecievedMessage(AlcDriveCommands.SCAN_RESULT_RES, JSON.stringify(result));
 

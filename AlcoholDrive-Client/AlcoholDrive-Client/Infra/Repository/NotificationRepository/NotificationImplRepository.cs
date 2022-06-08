@@ -24,7 +24,7 @@ namespace AlcoholDrive_Client.Infra.Repository.NotificationRepository {
         }
 
         private AlcSetting Load() {
-            if(File.Exists(SETTING_PATH) == false) {
+            if (File.Exists(SETTING_PATH) == false) {
                 return new AlcSetting();
             }
 
@@ -36,7 +36,7 @@ namespace AlcoholDrive_Client.Infra.Repository.NotificationRepository {
         }
 
         public override string GetSlackAPI() {
-            if(File.Exists(SETTING_PATH) == false) {
+            if (File.Exists(SETTING_PATH) == false) {
                 return "";
             }
 
@@ -53,12 +53,12 @@ namespace AlcoholDrive_Client.Infra.Repository.NotificationRepository {
         public override void SendSlack(SendAlcResult sendAlcResult) {
             PostMessage postMessage = new PostMessage();
             string resultText = sendAlcResult.AlcCheckResult ? "合格" : "不合格";
-            postMessage.text = $"検査者:{sendAlcResult.User.UserName} 検査結果:{resultText}";
+            postMessage.text = $"検査者:{sendAlcResult.User.UserName} 検査結果:{resultText} 呼気中アルコール濃度:{sendAlcResult.BAC}[mg/L]";
 
             AlcLogService.Write(postMessage.text);
 
             string slackAPI = this.GetSlackAPI();
-            
+
             string json = JsonConvert.SerializeObject(postMessage);
             //以下がなんかいるらしい
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;

@@ -14,6 +14,10 @@ namespace AlcoholDrive_Client.Model {
         /// </summary>
         public bool AlcCheckResult { get; set; }
         /// <summary>
+        /// 呼気中アルコール濃度
+        /// </summary>
+        public double BAC { get; set; }
+        /// <summary>
         /// 検査をしたユーザ
         /// </summary>
         public UserModel User { get; set; }

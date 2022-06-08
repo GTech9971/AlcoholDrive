@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace AlcoholDrive_Client.Infra.Repository {
 
     public class MockAlcoholDriveRepository : AlcoholDriveRepository {
-        
+
         private bool _isConnect;
 
         public override bool IsConnect {
@@ -24,11 +24,6 @@ namespace AlcoholDrive_Client.Infra.Repository {
 
         public MockAlcoholDriveRepository() {
             _isConnect = false;
-        }
-
-        public override bool CheckAlcohol() {
-            Thread.Sleep(3000);
-            return false;
         }
 
         public override bool ConnectDrive() {
@@ -45,6 +40,10 @@ namespace AlcoholDrive_Client.Infra.Repository {
         }
 
         public override void StopScanning() {
+        }
+
+        public override List<ushort> ReadingAlcoholValue() {
+            return new List<ushort>();
         }
     }
 }

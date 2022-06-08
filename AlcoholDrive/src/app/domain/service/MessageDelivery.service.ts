@@ -1,4 +1,5 @@
 import { Injectable } from "@angular/core";
+import { AlertController } from "@ionic/angular";
 import { Observable, Subject } from "rxjs";
 import { MessageModel } from "../model/Message.model";
 
@@ -14,7 +15,7 @@ export class MessageDeliveryService {
      */
     public readonly MessageObserver: Observable<MessageModel>;
 
-    constructor() {
+    constructor(private alrtCtrl: AlertController) {
         this._messageSubject = new Subject<MessageModel>();
         this.MessageObserver = this._messageSubject.asObservable();
 
@@ -30,6 +31,14 @@ export class MessageDeliveryService {
             };
             this._messageSubject.next(model);
             console.log(`Cmd:${model.Command} Data:${model.JsonStr}`);
+
+            // エラー
+            if (model.Command === 999) {
+                this.alrtCtrl.create({ header: 'エラー', message: model.JsonStr }).then(alt => {
+                    alt.present();
+                });
+            }
+
         });
     }
 

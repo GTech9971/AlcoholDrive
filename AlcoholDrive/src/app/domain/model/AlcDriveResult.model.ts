@@ -5,4 +5,6 @@ export interface AlcDriveResultodel {
     State: AlcDriveState;
     /** true:運転可能, false:運転不可能 */
     DrivableResult: boolean;
+    /** 呼気中アルコール濃度 */
+    BAC: number;
 }

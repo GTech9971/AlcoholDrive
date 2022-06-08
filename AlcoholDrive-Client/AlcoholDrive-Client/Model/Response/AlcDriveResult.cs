@@ -17,9 +17,14 @@ namespace AlcoholDrive_Client.Model.Response {
         /// true:運転可能, false:運転不可能
         /// </summary>
         public bool DrivableResult { get; set; }
+        /// <summary>
+        /// 呼気中アルコール濃度を返す mg\L
+        /// </summary>
+        public double BAC { get; set; }
 
         public AlcDriveResult() {
             State = AlcDriveState.NONE;
+            BAC = 0.0;
             DrivableResult = false;
         }
     }

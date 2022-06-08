@@ -1,12 +1,13 @@
-﻿using System;
+﻿using AlcoholDrive_Client.Model.Response;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace AlcoholDrive_Client.Repository {
-    
-    public abstract class AlcoholDriveRepository{
+
+    public abstract class AlcoholDriveRepository {
 
         public abstract bool IsConnect { get; }
 
@@ -29,10 +30,11 @@ namespace AlcoholDrive_Client.Repository {
         /// </summary>
         public abstract void StopScanning();
 
+
         /// <summary>
-        /// アルコールを検知する
+        /// アルコール値を取得する
         /// </summary>
-        /// <returns>true:アルコール未検知, false:アルコール検知</returns>
-        public abstract bool CheckAlcohol();
+        /// <returns></returns>
+        public abstract List<ushort> ReadingAlcoholValue();
     }
 }

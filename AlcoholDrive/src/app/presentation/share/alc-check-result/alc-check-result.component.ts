@@ -70,6 +70,7 @@ export class AlcCheckResultComponent implements OnInit, OnDestroy {
 
         const result: SendAlcResultModel = {
             AlcCheckResult: this.alcDriveResult.DrivableResult,
+            BAC: this.alcDriveResult.BAC,
             User: this.user,
             Message: ''
         };

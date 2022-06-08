@@ -3,6 +3,7 @@ using AlcoholDrive_Client.Model.Exceptions;
 using AlcoholDrive_Client.Repository;
 using HidApiAdapter;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 
@@ -144,19 +145,46 @@ namespace AlcoholDrive_Client.Infra.Repository {
             Thread.Sleep(1000);
         }
 
-        public override bool CheckAlcohol() {
+
+        /// <summary>
+        /// アルコール値を読み取る
+        /// </summary>
+        /// <returns></returns>
+        public override List<ushort> ReadingAlcoholValue() {
+            byte[] cmds = new byte[DATA_SIZE];
+            cmds[0] = AlcoholDriveCommands.READING_ALCOHOL;
+            Write2Device(cmds);
+
             byte[] data = new byte[DATA_SIZE];
             Read2Device(ref data);
-
-            if (data[0] == AlcoholDriveCommands.ALCOHOL_OK) {
-                return true;
-            }
-
-            if (data[0] == AlcoholDriveCommands.ALCOHOL_NG) {
-                return false;
-            }
-
-            throw new AlcoholDeviceIOException("データの読み取りに失敗");
+            return Convert16bitArray(data);
         }
+
+        /// <summary>
+        /// 上位、下位ビットに分割されたデータ配列を復元し返す
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
+        private List<ushort> Convert16bitArray(byte[] data) {
+            if (data.Length != DATA_SIZE) {
+                throw new ArgumentException();
+            }
+
+
+            List<ushort> values = new List<ushort>(DATA_SIZE / 2);
+            for (int i = 0; i < DATA_SIZE; i += 2) {
+                ushort headDat = data[i];
+                ushort tailDat = data[i + 1];
+
+                ushort value = headDat;
+                value <<= 8;
+                value |= tailDat;
+                values.Add(value);
+            }
+
+            return values;
+        }
+
     }
 }
