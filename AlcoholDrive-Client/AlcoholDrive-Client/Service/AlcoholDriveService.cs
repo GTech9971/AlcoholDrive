@@ -18,6 +18,15 @@ namespace AlcoholDrive_Client.Service {
         /// </summary>
         public const double BAC_LIMIT = 0.15;
 
+
+        private const int R0_CLEAN_AIR_FATOR = 60;
+
+        private const int CALIBRATION_SAMPLE_COUNTS = 50;
+
+        private const int READ_SAMPLE_TIMES = 50;
+
+        private const int RL_VALUE = 200;
+
         /// <summary>
         /// キャリブレーションの値
         /// </summary>
@@ -112,7 +121,6 @@ namespace AlcoholDrive_Client.Service {
                 string json = JsonConvert.SerializeObject(alcDriveResult);
                 this.deliveryService.PostCommand(AlcoholDriveFrontCommands.SCAN_RESULT, json);
 
-
                 //結果送信                
                 alcDriveResult = CheckAlcohol(this.R0);
                 this._state = AlcDriveState.OK;
@@ -138,35 +146,22 @@ namespace AlcoholDrive_Client.Service {
             }
         }
 
-        /// <summary>
-        /// BAC取得のためのR0を取得する
-        /// </summary>
-        /// <returns></returns>
-        private double Calibration() {
+        private double ReadData(int sampleCounts) {
             const int READING_COUNT = 4;
-
             List<ushort> values = new List<ushort>();
             //データ受信を5回行う 32 * 4 = 128
             for (int i = 0; i < READING_COUNT; i++) {
                 values.AddRange(this.repository.ReadingAlcoholValue());
             }
 
-
-            //キャリブレーション
-            double sensorVolt = 0;
-            double RS = 0; // 空気中のRS値
-            double R0 = 0; // アルコール中のR0値
             double avgValue = 0;
+            //平均値の算出
+            values.Take(sampleCounts).ToList().ForEach(v => {
+                avgValue += (RL_VALUE * (1024 - v) / (double)(v));
+            });
+            avgValue /= sampleCounts;
 
-            //平均値の算出 100回
-            values.Take(100).ToList().ForEach(v => { avgValue += v; });
-            avgValue /= 100;
-
-            sensorVolt = (avgValue / 1024) * 5.0;
-            RS = (5.0 - sensorVolt) / sensorVolt; // 省略 RL
-            R0 = RS / 60.0; // きれいな空気中のRS/R0=60
-
-            return R0;
+            return avgValue;
         }
 
         /// <summary>
@@ -179,16 +174,7 @@ namespace AlcoholDrive_Client.Service {
                 throw new Exception("キャリブレーションが実施されていません");
             }
 
-            List<ushort> values = this.repository.ReadingAlcoholValue();
-
-            ushort sensorValue = values.LastOrDefault();
-            double sensorVolt = (double)sensorValue / 1024 * 5.0;
-            // 測定対象のガス中のRS値
-            double RS_gas = (5.0 - sensorVolt) / sensorVolt; // 省略 *RL
-
-            // RS_gas/RS_air 空気中のRS割合
-            double ratio = RS_gas / R0;  // ratio = RS/R0   
-            double BAC = Math.Pow(10, -1 * (((Math.Log10(ratio)) + 0.2391) / 0.6008));  // mg/L中のBAC
+            double BAC = GetBAC();
 
             //Serial.println(BAC * 2);  // 血液内のアルコール濃度[mg/ml]に変換(1:2)
 
@@ -199,6 +185,65 @@ namespace AlcoholDrive_Client.Service {
                 State = AlcDriveState.OK,
                 DrivableResult = BAC < BAC_LIMIT
             };
+        }
+
+        /// <summary>
+        /// BAC取得のためのR0を取得する
+        /// </summary>
+        /// <returns></returns>
+        private double Calibration() {
+            return ReadData(CALIBRATION_SAMPLE_COUNTS);
+        }
+
+        /// <summary>
+        /// 呼気中アルコール濃度を取得する
+        /// </summary>
+        /// <returns></returns>
+        private double GetBAC() {
+            double read = ReadData(READ_SAMPLE_TIMES);
+            return CalculationBAC(read / R0 * R0_CLEAN_AIR_FATOR);
+        }
+
+        /// <summary>
+        /// 呼気中アルコール濃度を計算する
+        /// </summary>
+        /// <param name="RsR0Ratio"></param>
+        /// <returns></returns>
+        private double CalculationBAC(double RsR0Ratio) {
+            List<double[]> alcRate = new List<double[]>(11);
+            alcRate.Add(new double[] { 1.7, 2.3, -0.2, 0.22 });
+            alcRate.Add(new double[] { 1, 1.7, -0.27143, 0.41 });
+            alcRate.Add(new double[] { 1, 1.7, -0.27143, 0.41 });
+            alcRate.Add(new double[] { 0.55, 1, -1.53333, 1.1 });
+            alcRate.Add(new double[] { 0.4, 0.55, -4, 1.7 });
+            alcRate.Add(new double[] { 0.29, 0.4, -7.27273, 2.5 });
+            alcRate.Add(new double[] { 0.2, 0.29, -16.66667, 4 });
+            alcRate.Add(new double[] { 0.17, 0.2, -70, 6.1 });
+            alcRate.Add(new double[] { 0.14, 0.17, -63.33333, 8 });
+            alcRate.Add(new double[] { 0.12, 0.14, -100, 10 });
+            alcRate.Add(new double[] { 0.1, 0.12, -4450, 99 });
+
+            if (RsR0Ratio > alcRate[0][1]) {
+                return 0;
+            }
+            if (RsR0Ratio < alcRate[alcRate.Count - 1][0]) {
+                return 999;
+            }
+
+            double bsRatio = 0;
+            double grad = 0;
+            double bacBase = 0;
+
+            foreach (double[] alc in alcRate) {
+                if (alc[0] <= RsR0Ratio && RsR0Ratio < alc[1]) {
+                    bsRatio = alc[0];
+                    grad = alc[2];
+                    bacBase = alc[3];
+                    break;
+                }
+            }
+
+            return bacBase + ((RsR0Ratio - bsRatio) * grad);
         }
 
     }
