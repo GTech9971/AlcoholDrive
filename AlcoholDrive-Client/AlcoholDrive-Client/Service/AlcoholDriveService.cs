@@ -18,9 +18,6 @@ namespace AlcoholDrive_Client.Service {
         /// </summary>
         public const double BAC_LIMIT = 0.15;
 
-
-        private const int R0_CLEAN_AIR_FATOR = 60;
-
         private const int CALIBRATION_SAMPLE_COUNTS = 50;
 
         private const int READ_SAMPLE_TIMES = 50;
@@ -147,19 +144,19 @@ namespace AlcoholDrive_Client.Service {
         }
 
         private double ReadData(int sampleCounts) {
-            const int READING_COUNT = 4;
             List<ushort> values = new List<ushort>();
-            //データ受信を5回行う 32 * 4 = 128
-            for (int i = 0; i < READING_COUNT; i++) {
+            //データ受信を行う
+            for (int i = 0; i < sampleCounts; i++) {
                 values.AddRange(this.repository.ReadingAlcoholValue());
             }
 
             double avgValue = 0;
             //平均値の算出
-            values.Take(sampleCounts).ToList().ForEach(v => {
-                avgValue += (RL_VALUE * (1024 - v) / (double)(v));
+            values.ToList().ForEach(v => {
+                //avgValue += (RL_VALUE * (1024 - v) / (double)(v));
+                avgValue += v;
             });
-            avgValue /= sampleCounts;
+            avgValue = avgValue / values.Count;
 
             return avgValue;
         }
@@ -176,8 +173,6 @@ namespace AlcoholDrive_Client.Service {
 
             double BAC = GetBAC();
 
-            //Serial.println(BAC * 2);  // 血液内のアルコール濃度[mg/ml]に変換(1:2)
-
             AlcLogService.Write($"BAC = {BAC}[mg/L]");
 
             return new AlcDriveResult() {
@@ -192,7 +187,13 @@ namespace AlcoholDrive_Client.Service {
         /// </summary>
         /// <returns></returns>
         private double Calibration() {
-            return ReadData(CALIBRATION_SAMPLE_COUNTS);
+            double volt = ReadData(CALIBRATION_SAMPLE_COUNTS);
+            volt = (volt / 1024.0) * 5.0;
+
+            AlcLogService.Write($"Volt = {volt}");
+
+            double RS = ((5.0 * RL_VALUE) / volt) - RL_VALUE;
+            return RS / 60.0;
         }
 
         /// <summary>
@@ -200,9 +201,18 @@ namespace AlcoholDrive_Client.Service {
         /// </summary>
         /// <returns></returns>
         private double GetBAC() {
-            double read = ReadData(READ_SAMPLE_TIMES);
-            return CalculationBAC(read / R0 * R0_CLEAN_AIR_FATOR);
+            double volt = ReadData(READ_SAMPLE_TIMES);
+            volt = (volt / 1024.0) * 5.0;
+
+            double RS_gas = ((5.0 * RL_VALUE) / volt) - RL_VALUE;
+            /*-Replace the value of R0 with the value of R0 in your test -*/
+            R0 = 143.0;
+            double ratio = RS_gas / R0;// ratio = RS/R0
+            double x = 0.4 * ratio;
+            return Math.Pow(x, -1.431);  //BAC in mg/L
         }
+
+
 
         /// <summary>
         /// 呼気中アルコール濃度を計算する
@@ -210,6 +220,9 @@ namespace AlcoholDrive_Client.Service {
         /// <param name="RsR0Ratio"></param>
         /// <returns></returns>
         private double CalculationBAC(double RsR0Ratio) {
+
+            AlcLogService.Write($"Ration = {RsR0Ratio}");
+
             List<double[]> alcRate = new List<double[]>(11);
             alcRate.Add(new double[] { 1.7, 2.3, -0.2, 0.22 });
             alcRate.Add(new double[] { 1, 1.7, -0.27143, 0.41 });
