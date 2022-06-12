@@ -20,7 +20,7 @@ namespace AlcoholDrive_Client.Service {
 
         private const int CALIBRATION_SAMPLE_COUNTS = 50;
 
-        private const int READ_SAMPLE_TIMES = 50;
+        private const int READ_SAMPLE_TIMES = 2500;
 
         private const int RL_VALUE = 200;
 
