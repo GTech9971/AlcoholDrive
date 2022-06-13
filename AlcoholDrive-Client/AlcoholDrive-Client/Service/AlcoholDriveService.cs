@@ -156,8 +156,19 @@ namespace AlcoholDrive_Client.Service {
                 values.AddRange(this.repository.ReadingAlcoholValue());
             }
 
+
+            AlcLogService.Write("生データ");
+            values.ForEach(v => {
+                AlcLogService.Write(message: v.ToString(), headerLess: true);
+            });
+
+
+            AlcLogService.Write("加工データ");
             //四分位範囲を行う
             values = InterquartileRange(values);
+            values.ForEach(v => {
+                AlcLogService.Write(message: v.ToString(), headerLess: true);
+            });
 
             double avgValue = 0;
             //平均値の算出
