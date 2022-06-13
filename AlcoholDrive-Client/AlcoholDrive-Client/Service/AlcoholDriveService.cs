@@ -143,12 +143,21 @@ namespace AlcoholDrive_Client.Service {
             }
         }
 
+        /// <summary>
+        /// デバイスからアナログ値を取得する
+        /// </summary>
+        /// <param name="sampleCounts">取得回数 * 32</param>
+        /// <returns></returns>
         private double ReadData(int sampleCounts) {
-            List<ushort> values = new List<ushort>();
+            const int DATA_SIZE = 64;
+            List<ushort> values = new List<ushort>(DATA_SIZE / 2 * sampleCounts);
             //データ受信を行う
             for (int i = 0; i < sampleCounts; i++) {
                 values.AddRange(this.repository.ReadingAlcoholValue());
             }
+
+            //四分位範囲を行う
+            values = InterquartileRange(values);
 
             double avgValue = 0;
             //平均値の算出
@@ -159,6 +168,42 @@ namespace AlcoholDrive_Client.Service {
             avgValue = avgValue / values.Count;
 
             return avgValue;
+        }
+
+        /// <summary>
+        /// 四分位範囲を行う
+        /// </summary>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        private List<ushort> InterquartileRange(List<ushort> list) {
+            //昇順にソート
+            list.Sort((a, b) => { return a - b; });
+
+            //Q2
+            ushort q2 = 0;
+            if (list.Count % 2 == 0) {
+                q2 = (ushort)((list[list.Count - 1 / 2] + list[list.Count / 2]) / 2.0);
+            } else {
+                q2 = list[list.Count / 2];
+            }
+
+            //Q1
+            int q1Index = list.Count / 4;
+            ushort q1 = list[q1Index];
+            //Q3
+            int q3Index = list.Count - q1Index;
+            ushort q3 = list[q3Index];
+            //IQR
+            ushort iqr = (ushort)(q3 - q1);
+
+            List<ushort> result = new List<ushort>();
+            foreach (ushort a in list) {
+                if (q1 - (iqr * 1.5) >= a) { continue; }
+                if (q3 + (iqr * 1.5) <= a) { continue; }
+                result.Add(a);
+            }
+
+            return result;
         }
 
         /// <summary>
