@@ -5,8 +5,10 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Subjects;
 
 namespace AlcoholDrive_Client.Service {
+
     public class AlcoholDriveService {
 
         private AlcDriveState _state;
@@ -25,9 +27,27 @@ namespace AlcoholDrive_Client.Service {
         private const int RL_VALUE = 200;
 
         /// <summary>
+        /// キャリブレーションの値のサブジェクト
+        /// </summary>
+        public readonly Subject<double> R0Subject;
+
+        /// <summary>
         /// キャリブレーションの値
         /// </summary>
-        private double R0;
+        private double _R0;
+
+        /// <summary>
+        /// キャリブレーションの値
+        /// </summary>
+        public double R0 {
+            get {
+                return _R0;
+            }
+            set {
+                this._R0 = value;
+                this.R0Subject.OnNext(_R0);
+            }
+        }
 
         /// <summary>
         /// true:接続, false:切断
@@ -40,6 +60,8 @@ namespace AlcoholDrive_Client.Service {
 
         public AlcoholDriveService(AlcoholDriveRepository repository,
             MessageDeliveryService deliveryService) : base() {
+
+            this.R0Subject = new Subject<double>();
 
             this.R0 = -1;
             this._state = AlcDriveState.NONE;
@@ -155,20 +177,14 @@ namespace AlcoholDrive_Client.Service {
             for (int i = 0; i < sampleCounts; i++) {
                 values.AddRange(this.repository.ReadingAlcoholValue());
             }
+            values.Sort((a, b) => a - b);
+
+            AlcLogService.WriteDataArray("生データ", values);
 
 
-            AlcLogService.Write("生データ");
-            values.ForEach(v => {
-                AlcLogService.Write(message: v.ToString(), headerLess: true);
-            });
-
-
-            AlcLogService.Write("加工データ");
             //四分位範囲を行う
             values = InterquartileRange(values);
-            values.ForEach(v => {
-                AlcLogService.Write(message: v.ToString(), headerLess: true);
-            });
+            AlcLogService.WriteDataArray("加工データ", values);
 
             double avgValue = 0;
             //平均値の算出
@@ -191,12 +207,12 @@ namespace AlcoholDrive_Client.Service {
             list.Sort((a, b) => { return a - b; });
 
             //Q2
-            ushort q2 = 0;
-            if (list.Count % 2 == 0) {
-                q2 = (ushort)((list[list.Count - 1 / 2] + list[list.Count / 2]) / 2.0);
-            } else {
-                q2 = list[list.Count / 2];
-            }
+            //ushort q2 = 0;
+            //if (list.Count % 2 == 0) {
+            //    q2 = (ushort)((list[list.Count - 1 / 2] + list[list.Count / 2]) / 2.0);
+            //} else {
+            //    q2 = list[list.Count / 2];
+            //}
 
             //Q1
             int q1Index = list.Count / 4;
@@ -206,6 +222,11 @@ namespace AlcoholDrive_Client.Service {
             ushort q3 = list[q3Index];
             //IQR
             ushort iqr = (ushort)(q3 - q1);
+
+            //すべて同じ値の場合は、リストをそのまま返す
+            if (iqr == 0) {
+                return list;
+            }
 
             List<ushort> result = new List<ushort>();
             foreach (ushort a in list) {
@@ -262,7 +283,7 @@ namespace AlcoholDrive_Client.Service {
 
             double RS_gas = ((5.0 * RL_VALUE) / volt) - RL_VALUE;
             /*-Replace the value of R0 with the value of R0 in your test -*/
-            R0 = 143.0;
+            //R0 = 143.0;
             double ratio = RS_gas / R0;// ratio = RS/R0
             double x = 0.4 * ratio;
             return Math.Pow(x, -1.431);  //BAC in mg/L

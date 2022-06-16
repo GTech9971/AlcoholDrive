@@ -27,6 +27,11 @@ namespace AlcoholDrive_Client {
             notificationService = new NotificationService(notificationRepository, deliveryService);
 
             webView21.WebMessageReceived += WebView21_WebMessageReceived;
+
+            string title = this.Text;
+            alcService.R0Subject.Subscribe(r0 => {
+                this.Text = $"{title} - R0:{r0}";
+            });
         }
 
         private async void AlcoholDriveForm_Load(object sender, EventArgs e) {
